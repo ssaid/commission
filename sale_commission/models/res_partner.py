@@ -22,8 +22,9 @@ class ResPartner(models.Model):
     agent_type = fields.Selection(
         selection=[("agent", "External agent")], string="Type", required=True,
         default="agent")
-    commission = fields.Many2one(
+    commission = fields.Many2many(
         string="Commission", comodel_name="sale.commission",
+        relation="agent_commission_rel", column1="partner_id", column2="commission_id",
         help="This is the default commission used in the sales where this "
              "agent is assigned. It can be changed on each operation if "
              "needed.")

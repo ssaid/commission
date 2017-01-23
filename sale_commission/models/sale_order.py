@@ -32,13 +32,14 @@ class SaleOrderLine(models.Model):
             partner = self.env['res.partner'].browse(
                 self.env.context['partner_id'])
             for agent in partner.agents:
-                vals = {
-                    'agent': agent.id,
-                    'commission': agent.commission.id,
-                }
-                vals['display_name'] = self.env['sale.order.line.agent']\
-                    .new(vals).display_name
-                agents.append(vals)
+                for commission in agent.commission:
+                    vals = {
+                        'agent': agent.id,
+                        'commission': commission.id,
+                    }
+                    vals['display_name'] = self.env['sale.order.line.agent']\
+                        .new(vals).display_name
+                    agents.append(vals)
         return [(0, 0, x) for x in agents]
 
     agents = fields.One2many(
@@ -74,7 +75,7 @@ class SaleOrderLineAgent(models.Model):
     amount = fields.Float(compute="_compute_amount", store=True)
 
     _sql_constraints = [
-        ('unique_agent', 'UNIQUE(sale_line, agent)',
+        ('unique_agent', 'UNIQUE(sale_line, agent, commission)',
          'You can only add one time each agent.')
     ]
 

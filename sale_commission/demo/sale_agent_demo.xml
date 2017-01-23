@@ -23,7 +23,7 @@
                 search="[('name','=','India')]" />
             <field name="street">56 Beijing street</field>
             <field name="agent" eval="1" />
-            <field name="commission" ref="demo_commission_paid" />
+            <field name="commission" eval="[(6, 0, [ref('demo_commission_paid')])]" />
             <field name="lang">en_US</field>
         </record>
 
@@ -36,7 +36,7 @@
                 search="[('name','=','India')]" />
             <field name="street">Wall Street 2</field>
             <field name="agent" eval="1" />
-            <field name="commission" ref="demo_commission" />
+            <field name="commission" eval="[(6, 0, [ref('demo_commission')])]" />
             <field name="lang">en_US</field>
         </record>
 
@@ -49,9 +49,21 @@
                 search="[('name','=','India')]" />
             <field name="street">Belgium Gao</field>
             <field name="agent" eval="1" />
-            <field name="commission" ref="demo_commission" />
+            <field name="commission" eval="[(6, 0, [ref('demo_commission')])]" />
             <field name="lang">en_US</field>
         </record>
 
+
+        <record id="res_partner_shlama_agent" model="res.partner">
+            <field name="name">Agent Shlama</field>
+            <field name="city">Ituzaingo</field>
+            <field name="zip">1714</field>
+            <field name="country_id" model="res.country"
+                search="[('name','=','Argentina')]" />
+            <field name="street">Calle Falsa 123</field>
+            <field name="agent" eval="1" />
+            <field name="commission" eval="[(6, 0, [ref('demo_commission'), ref('demo_commission_paid')])]" />
+            <field name="lang">en_US</field>
+        </record>
     </data>
 </openerp>
