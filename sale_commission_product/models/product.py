@@ -19,16 +19,11 @@ class ProductProductAgent(models.Model):
 
     @api.multi
     def get_commission_id_product(self, product, agent):
-        commission_id = False
-        # commission_id for all agent
-        for commission_all_agent in self.search(
-                [('product_id', '=', product), ('agent', '=', False)]):
-                    commission_id = commission_all_agent.commission.id
-        # commission_id for agent
-        for product_agent_id in self.search(
-                [('product_id', '=', product), ('agent', '=', agent.id)]):
-                    commission_id = product_agent_id.commission.id
-        return commission_id
+        commission_ids = self.search([('product_id', '=', product), ('agent', '=', False)]).mapped('commission')  # All agents
+        commission_by_agent_ids = self.search([('product_id', '=', product), ('agent', '=', agent.id)]).mapped('commission')  # Agent Specific
+        if commission_by_agent_ids:
+            commission_ids = commission_by_agent_ids
+        return commission_ids
 
     product_id = fields.Many2one(
         comodel_name="product.product",
@@ -50,6 +45,6 @@ class ProductProductAgent(models.Model):
         return res
 
     _sql_constraints = [
-        ('unique_agent', 'UNIQUE(product_id, agent)',
+        ('unique_agent', 'UNIQUE(product_id, agent, commission)',
          'You can only add one time each agent.')
     ]

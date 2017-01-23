@@ -27,15 +27,16 @@ class SaleOrderLine(models.Model):
 
             for agent in partner.agents:
                 # default commission_id for agent
-                commission_id = agent.commission.id
+                commission_ids = agent.commission
                 commission_id_product = self.env["product.product.agent"]\
                     .get_commission_id_product(product, agent)
                 if commission_id_product:
-                    commission_id = commission_id_product
-
-                agent_list.append({'agent': agent.id,
-                                   'commission': commission_id
-                                   })
+                    commission_ids = commission_id_product
+                for commission in commission_ids:
+                    agent_list.append({
+                        'agent': agent.id,
+                        'commission': commission.id
+                    })
 
                 res['value']['agents'] = [(0, 0, x) for x in agent_list]
 
