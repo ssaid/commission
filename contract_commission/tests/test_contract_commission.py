@@ -17,7 +17,7 @@ class TestContractCommission(common.TransactionCase):
         self.agent = self.env['res.partner'].create(
             {'name': 'Agent',
              'agent': True,
-             'commission': self.commission.id})
+             'commission': [(6, 0, [self.commission.id, ])]})
         self.partner = self.env.ref('base.res_partner_1')
         self.contract = self.env['account.analytic.account'].create(
             {'partner_id': self.partner.id,
@@ -41,6 +41,7 @@ class TestContractCommission(common.TransactionCase):
         invoice_lines = self.env['account.invoice.line'].search(
             [('account_analytic_id', '=', self.contract.id)])
         self.assertEqual(len(invoice_lines), 1)
+        import ipdb; ipdb.set_trace()
         self.assertEqual(len(invoice_lines.agents), 1)
         self.assertEqual(invoice_lines.agents.agent, self.agent)
         self.assertEqual(
